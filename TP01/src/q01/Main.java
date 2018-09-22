@@ -48,18 +48,23 @@ public class Main {
 
 	public static int rechMaxSurfRectQuadratique(int h, Point points[]) {
 		int sMax = 0;
-
+		
 		for (int i = 0; i < points.length; i++) {
 			int minH = h;
 			int surface = 0;
 
 			for (int j = i + 1; j < points.length; j++) {
-				surface = minH * (points[j].getX() - points[i].getX());
+				// Calculer la surface pour le couple de points courant 
+				int s = minH * (points[j].getX() - points[i].getX());
+				surface = surface < s ? s : surface;
+				
+				// La hauteur minimale pour le prochain couple de points est
+				// l'ordonnée du deuxième point si celle-ci est plus petite
 				if (minH > points[j].getY()) {
 					minH = points[j].getY();
 				}
 			}
-
+			
 			if (sMax < surface) {
 				sMax = surface;
 			}
