@@ -1,4 +1,4 @@
-package q01;
+package questions;
 
 public class Point {
 
@@ -8,6 +8,7 @@ public class Point {
 	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
+		//System.out.println("Point created ("+ this.x + ", " + this.y +")");
 	}
 
 	public int getX() {
