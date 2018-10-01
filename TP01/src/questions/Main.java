@@ -24,7 +24,6 @@ public class Main {
 		int index;
 		long start;
 		
-		Point points[];
 		String line;
 		String[] parts;
 
@@ -34,7 +33,7 @@ public class Main {
 
 		StringBuilder sb;
 
-		for (int i = 1; i < nameFile.length; i++) {
+		for (int i = 0; i < nameFile.length; i++) {
 
 			try {
 
@@ -77,7 +76,10 @@ public class Main {
 					sb.append(nameFile[i]);
 					sb.append(": Max surface = ");
 					start = System.currentTimeMillis();
-					sb.append(rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
+					//sb.append(rechMaxSurfRectCubique(l, h));
+					//sb.append(rechMaxSurfRectQuadratique(l, h));
+					//sb.append(rechMaxSurfRectDiviserRegner(0, points.length - 1, l, h));
+					sb.append(rechMaxSurfRectLineaire(l, h));
 					sb.append(" find in ");
 					sb.append(System.currentTimeMillis() - start);
 					sb.append(" ms.");
@@ -123,11 +125,16 @@ public class Main {
 		return surfaceMax;
 	}
 
-	public static int rechMaxSurfRectQuadratique(int h) {
+	public static int rechMaxSurfRectQuadratique(int l, int h) {
 		int surfaceMax = 0;
 		int hauteurMin;
 		int surface;
 		int surfaceTmp;
+		
+		
+		if(points.length <= 0) {
+			return l * h;
+		}
 
 		for (int i = 0; i < points.length; i++) {
 			// Init. des variables
@@ -156,23 +163,15 @@ public class Main {
 
 		return surfaceMax;
 	}
-
-//	public static int rechMaxSurfRectDiviserRegner(Point points[], int indexStart, int indexEnd, int surfaceMax) {
-//		int pivot = indexStart;
-//		int surface;
-//		if(indexStart < indexEnd) {
-//			for(int i = indexStart + 1; indexEnd < indexEnd; i++)
-//				if(points[pivot].getY() > points[i].getY())
-//					pivot = i;
-//			if()
-//			
-//			return Math.max(rechMaxSurfRectDiviserRegner(points, indexStart, pivot -1), rechMaxSurfRectDiviserRegner(points, pivot+1, indexEnd));
-//		}
-//		
-//		return (points[indexEnd].getX() - points[indexStart].getX()) * Math.min(points[indexStart].getY(), points[indexEnd].getY());
-//	}
-
-	public static int rechMaxSurfRectDiviserRegner(Point points[], int gauche, int droite, int hauteur) {
+	
+	
+	
+	public static int rechMaxSurfRectDiviserRegner(int gauche, int droite, int longueur, int hauteur) {
+		
+		if(points.length <= 0) {
+			return longueur * hauteur;
+		}
+		
 		// CAS DE BASE : pas de points
 		if (droite - 1 == gauche) {
 			// RETOURNE aire du rectangle sans points
@@ -189,8 +188,8 @@ public class Main {
 		}
 
 		// CALCULER RECTANGLE MAX A GAUCHE/DROITE (récursivité)
-		int maxGauche = rechMaxSurfRectDiviserRegner(points, gauche, min, hauteur);
-		int maxDroite = rechMaxSurfRectDiviserRegner(points, min, droite, hauteur);
+		int maxGauche = rechMaxSurfRectDiviserRegner(gauche, min, longueur, hauteur);
+		int maxDroite = rechMaxSurfRectDiviserRegner(min, droite, longueur, hauteur);
 
 		// CALCULER LE RECTANGLE AUTOUR DU MINIMUM
 		int aireMin = points[min].getY() * (points[droite].getX() - points[gauche].getX());
@@ -198,7 +197,10 @@ public class Main {
 		// RETOURNE aire maximale ENTRE droite, gauche ET aireMin
 		return Math.max(maxGauche, Math.max(maxDroite, aireMin));
 	}
-	public static int rechMaxSurfRectLineaire(int h) {
+	
+	
+	
+	public static int rechMaxSurfRectLineaire(int l, int h) {
 
 		Stack<Integer> pile = new Stack<>();
 
@@ -207,10 +209,14 @@ public class Main {
 		int surface;
 
 		int index = 0;
+		
+		if(points.length <= 0) {
+			return l*h;
+		}
 
 		while (index < points.length) {
 			
-			if(index > 0){
+			if(index > 1){
 				surface = (points[index].getX() - points[index - 1].getX()) * h;
 				if (surfaceMax < surface)
 					surfaceMax = surface;
@@ -221,25 +227,25 @@ public class Main {
 				index++;
 			} else {
 				indexHauteurMax = pile.pop();
-				if (pile.empty())
-					surface = points[indexHauteurMax].getY() * (points[indexHauteurMax].getX() - points[indexHauteurMax - 1].getX());
-				else
-					surface = points[indexHauteurMax].getY() * (points[index - 1].getX() - points[pile.peek()].getX());
-
-				if (surfaceMax < surface)
-					surfaceMax = surface;
+				
+				if (!pile.empty()) {
+					surface = points[indexHauteurMax].getY() * (points[index].getX() - points[pile.peek()].getX());
+					
+					if (surfaceMax < surface)
+						surfaceMax = surface;
+				}
 			}
 		}
 
 		while (!pile.empty()) {
 			indexHauteurMax = pile.pop();
-			if (pile.empty())
-				surface = points[indexHauteurMax].getY() * points[indexHauteurMax].getX();
-			else
-				surface = points[indexHauteurMax].getY() * (points[index - 1].getX() - points[pile.peek()].getX());
-
-			if (surfaceMax < surface)
-				surfaceMax = surface;
+			
+			if (!pile.empty()){
+				surface = points[indexHauteurMax].getY() * (points[indexHauteurMax - 1].getX() - points[pile.peek()].getX());
+				
+				if (surfaceMax < surface)
+					surfaceMax = surface;
+			}		
 		}
 
 		return surfaceMax;
