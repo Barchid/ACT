@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Stack;
 
 public class Main {
 
@@ -75,7 +76,10 @@ public class Main {
 					sb.append(nameFile[i]);
 					sb.append(": Max surface = ");
 					start = System.currentTimeMillis();
-					sb.append(rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
+//					sb.append(rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
+//					sb.append(rechMaxSurfRectCubique(h, points));
+//					sb.append(rechMaxSurfRectQuadratique(h, points));
+					sb.append(rechercheLinéaire(points, h));
 					sb.append(" find in ");
 					sb.append(System.currentTimeMillis() - start);
 					sb.append(" ms.");
@@ -91,6 +95,13 @@ public class Main {
 
 	}
 
+	/**
+	 * Recherche de l'aire maximum du rectangle en O(n³)
+	 * 
+	 * @param h      la hauteur du graphe
+	 * @param points les points du graphe
+	 * @return l'aire maximale que l'on peut obtenir
+	 */
 	public static int rechMaxSurfRectCubique(int h, Point points[]) {
 		int surface;
 		int hauteurMin;
@@ -116,6 +127,13 @@ public class Main {
 		return surfaceMax;
 	}
 
+	/**
+	 * Recherche de l'aire maximale du rectangle en O(n²)
+	 * 
+	 * @param h      la hauteur du graphe
+	 * @param points les points du graphe
+	 * @return l'aire maximale d'un rectangle
+	 */
 	public static int rechMaxSurfRectQuadratique(int h, Point points[]) {
 		int surfaceMax = 0;
 		int hauteurMin;
@@ -150,21 +168,16 @@ public class Main {
 		return surfaceMax;
 	}
 
-//	public static int rechMaxSurfRectDiviserRegner(Point points[], int indexStart, int indexEnd, int surfaceMax) {
-//		int pivot = indexStart;
-//		int surface;
-//		if(indexStart < indexEnd) {
-//			for(int i = indexStart + 1; indexEnd < indexEnd; i++)
-//				if(points[pivot].getY() > points[i].getY())
-//					pivot = i;
-//			if()
-//			
-//			return Math.max(rechMaxSurfRectDiviserRegner(points, indexStart, pivot -1), rechMaxSurfRectDiviserRegner(points, pivot+1, indexEnd));
-//		}
-//		
-//		return (points[indexEnd].getX() - points[indexStart].getX()) * Math.min(points[indexStart].getY(), points[indexEnd].getY());
-//	}
-
+	/**
+	 * Recherche l'aire maximale d'un rectangle en utilisant le paradigme "Diviser
+	 * pour régner"
+	 * 
+	 * @param points  les points
+	 * @param gauche  la borne de gauche (initialisée au départ à 0)
+	 * @param droite  la borne de droite (initialisée au départ à points.length -1)
+	 * @param hauteur la hauteur du graphe
+	 * @return l'aire maximale du rectangle
+	 */
 	public static int rechMaxSurfRectDiviserRegner(Point points[], int gauche, int droite, int hauteur) {
 		// CAS DE BASE : pas de points
 		if (droite - 1 == gauche) {
@@ -187,8 +200,70 @@ public class Main {
 
 		// CALCULER LE RECTANGLE AUTOUR DU MINIMUM
 		int aireMin = points[min].getY() * (points[droite].getX() - points[gauche].getX());
-		
+
 		// RETOURNE aire maximale ENTRE droite, gauche ET aireMin
 		return Math.max(maxGauche, Math.max(maxDroite, aireMin));
+	}
+
+	/**
+	 * Recherche l'aire maximale d'un rectangle avec un algorithme en O(n)
+	 * 
+	 * @param points les points du graphe
+	 * @param h      la hauteur du graphe
+	 * @return l'aire maximale d'un rectangle du graphe
+	 */
+	public static int rechercheLinéaire(Point points[], int h) {
+		Stack<Point> pile = new Stack<Point>();
+		int aireMax = 0;
+
+		// On ajoute directement le premier point (0,0)
+		pile.push(points[0]);
+
+		// POUR CHAQUE POINT de 1 à n-1
+		for (int i = 1; i < points.length; i++) {
+			
+			// SI [le point décroit en ordonnée]
+			Point top = pile.peek();
+			if (points[i].getY() < top.getY()) {
+				int hauteurMin = h;
+				
+				// TANT QUE la pile n'est pas vide
+				while (!pile.empty()) {
+					// Retirer le sommet (pop)
+					top = pile.pop();
+					
+					// Je calcule l'aire du rectangle entre point[i] et le point qui a été "poppé"
+					int aire = (points[i].getX() - top.getX()) * hauteurMin;
+					
+					// VERIFIER si aire max change
+					if(aire > aireMax) {
+						aireMax = aire;
+					}
+					
+					// La hauteur minimale devient l'ordonnée du point poppé
+					hauteurMin = top.getY();
+				}
+				
+			}
+			
+			// Ajouter le point courant dans la pile 
+			pile.push(points[i]);
+		}
+		// VIDER la pile s'il reste des trucs
+		// RETIRER dernier point (à n-1)
+		Point last = pile.pop();
+		int hauteurMin = h;
+		while(!pile.empty()) {
+			Point top = pile.pop();
+			int aire = (last.getX() - top.getX()) * hauteurMin;
+			// VERIFIER si aire max change
+			if(aire > aireMax) {
+				aireMax = aire;
+			}
+			// La hauteur minimale devient l'ordonnée du point poppé
+			hauteurMin = top.getY();
+		}
+		
+		return aireMax;
 	}
 }
