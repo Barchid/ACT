@@ -8,32 +8,34 @@ import java.io.IOException;
 
 public class Main {
 
-	final static String[] nameFile = { "ex_N0_res10000", "ex_N2_res10000", "ex_N10_res24400144", "ex_N100_res5980",
-			"ex_N100_res6741", "ex_N500_res7616", "ex_N500_res7854", "ex_N100000_res100000", "ex_N200000_res75141975",
-			"ex=_N100000_res10000000", "ex=_N200000_res20000000", "exCodeChef_N5_res49997500",
+	final static String[] nameFile = { "ex_N0_res10000", "ex_N2_res10000", "ex_N5_res153", "ex_N10_res24400144",
+			"ex_N100_res5980", "ex_N100_res6741", "ex_N500_res7616", "ex_N500_res7854", "ex_N100000_res100000",
+			"ex_N200000_res75141975", "ex=_N100000_res10000000", "ex=_N200000_res20000000", "exCodeChef_N5_res49997500",
 			"exT_N100000_res30011389", "exT_N200000_res75141975" };
 
+//	private final static String[] nameFile = { "ex_N5_res153" };
+
 	public static void main(String[] args) {
-		
+
 		int l;
 		int h;
 		int index;
 		long start;
-		
+
 		Point points[];
 		String line;
 		String[] parts;
-		
+
 		File f;
 		FileReader fr;
 		BufferedReader br;
-		
+
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (int i = 0; i < nameFile.length; i++) {
-			
+
 			try {
-				
+
 				f = new File(nameFile[i]);
 				fr = new FileReader(f);
 				br = new BufferedReader(fr);
@@ -68,18 +70,17 @@ public class Main {
 					fr.close();
 
 					points[points.length - 1] = new Point(l, 0);
-					
+
 					sb = new StringBuilder();
 					sb.append(nameFile[i]);
 					sb.append(": Max surface = ");
 					start = System.currentTimeMillis();
-					sb.append(rechMaxSurfRectQuadratique(h, points));
+					sb.append(rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
 					sb.append(" find in ");
 					sb.append(System.currentTimeMillis() - start);
 					sb.append(" ms.");
-					
+
 					System.out.println(sb.toString());
-					
 				} catch (IOException exception) {
 					System.out.println("Erreur lors de la lecture : " + exception.getMessage());
 				}
@@ -135,7 +136,7 @@ public class Main {
 					surface = surfaceTmp;
 
 				// La hauteur minimale pour le prochain couple de points est
-				// l'ordonn�e du deuxi�me point si celle-ci est plus petite
+				// l'ordonnée du deuxième point si celle-ci est plus petite
 				if (hauteurMin > points[j].getY()) {
 					hauteurMin = points[j].getY();
 				}
@@ -163,4 +164,31 @@ public class Main {
 //		
 //		return (points[indexEnd].getX() - points[indexStart].getX()) * Math.min(points[indexStart].getY(), points[indexEnd].getY());
 //	}
+
+	public static int rechMaxSurfRectDiviserRegner(Point points[], int gauche, int droite, int hauteur) {
+		// CAS DE BASE : pas de points
+		if (droite - 1 == gauche) {
+			// RETOURNE aire du rectangle sans points
+			return (points[droite].getX() - points[gauche].getX()) * hauteur;
+		}
+
+		// TROUVER POINT MINIMUM en ordonnée entre ]droite, gauche[
+		// (déterminer la division)
+		int min = gauche + 1;
+		for (int i = gauche + 1; i < droite; i++) {
+			if (points[i].getY() < points[min].getY()) {
+				min = i;
+			}
+		}
+
+		// CALCULER RECTANGLE MAX A GAUCHE/DROITE (récursivité)
+		int maxGauche = rechMaxSurfRectDiviserRegner(points, gauche, min, hauteur);
+		int maxDroite = rechMaxSurfRectDiviserRegner(points, min, droite, hauteur);
+
+		// CALCULER LE RECTANGLE AUTOUR DU MINIMUM
+		int aireMin = points[min].getY() * (points[droite].getX() - points[gauche].getX());
+		
+		// RETOURNE aire maximale ENTRE droite, gauche ET aireMin
+		return Math.max(maxGauche, Math.max(maxDroite, aireMin));
+	}
 }
