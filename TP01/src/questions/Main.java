@@ -5,15 +5,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Stack;
 
 public class Main {
 
-	final static String[] nameFile = { "ex_N0_res10000", "ex_N2_res10000", "ex_N5_res153", "ex_N10_res24400144",
+	public final static String[] nameFile = { "ex_N0_res10000", "ex_N2_res10000", "ex_N10_res24400144",
 			"ex_N100_res5980", "ex_N100_res6741", "ex_N500_res7616", "ex_N500_res7854", "ex_N100000_res100000",
 			"ex_N200000_res75141975", "ex=_N100000_res10000000", "ex=_N200000_res20000000", "exCodeChef_N5_res49997500",
 			"exT_N100000_res30011389", "exT_N200000_res75141975" };
 
-//	private final static String[] nameFile = { "ex_N5_res153" };
+	public static Point points[];
 
 	public static void main(String[] args) {
 
@@ -21,7 +23,7 @@ public class Main {
 		int h;
 		int index;
 		long start;
-
+		
 		Point points[];
 		String line;
 		String[] parts;
@@ -30,9 +32,9 @@ public class Main {
 		FileReader fr;
 		BufferedReader br;
 
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb;
 
-		for (int i = 0; i < nameFile.length; i++) {
+		for (int i = 1; i < nameFile.length; i++) {
 
 			try {
 
@@ -81,6 +83,7 @@ public class Main {
 					sb.append(" ms.");
 
 					System.out.println(sb.toString());
+
 				} catch (IOException exception) {
 					System.out.println("Erreur lors de la lecture : " + exception.getMessage());
 				}
@@ -91,11 +94,15 @@ public class Main {
 
 	}
 
-	public static int rechMaxSurfRectCubique(int h, Point points[]) {
+	public static int rechMaxSurfRectCubique(int l, int h) {
 		int surface;
 		int hauteurMin;
 		int surfaceMax = 0;
 
+		//Case de base, aucune point
+		if(points.length == 2)
+			return points[1].getX() * h;
+		
 		for (int i = 0; i < points.length; i++) {
 			for (int j = i + 1; j < points.length; j++) {
 
@@ -116,7 +123,7 @@ public class Main {
 		return surfaceMax;
 	}
 
-	public static int rechMaxSurfRectQuadratique(int h, Point points[]) {
+	public static int rechMaxSurfRectQuadratique(int h) {
 		int surfaceMax = 0;
 		int hauteurMin;
 		int surface;
@@ -190,5 +197,51 @@ public class Main {
 		
 		// RETOURNE aire maximale ENTRE droite, gauche ET aireMin
 		return Math.max(maxGauche, Math.max(maxDroite, aireMin));
+	}
+	public static int rechMaxSurfRectLineaire(int h) {
+
+		Stack<Integer> pile = new Stack<>();
+
+		int surfaceMax = 0;
+		int indexHauteurMax;
+		int surface;
+
+		int index = 0;
+
+		while (index < points.length) {
+			
+			if(index > 0){
+				surface = (points[index].getX() - points[index - 1].getX()) * h;
+				if (surfaceMax < surface)
+					surfaceMax = surface;
+			}
+			
+			if (pile.empty()|| points[pile.peek()].getY() <= points[index].getY() ) {
+				pile.push(index);
+				index++;
+			} else {
+				indexHauteurMax = pile.pop();
+				if (pile.empty())
+					surface = points[indexHauteurMax].getY() * (points[indexHauteurMax].getX() - points[indexHauteurMax - 1].getX());
+				else
+					surface = points[indexHauteurMax].getY() * (points[index - 1].getX() - points[pile.peek()].getX());
+
+				if (surfaceMax < surface)
+					surfaceMax = surface;
+			}
+		}
+
+		while (!pile.empty()) {
+			indexHauteurMax = pile.pop();
+			if (pile.empty())
+				surface = points[indexHauteurMax].getY() * points[indexHauteurMax].getX();
+			else
+				surface = points[indexHauteurMax].getY() * (points[index - 1].getX() - points[pile.peek()].getX());
+
+			if (surfaceMax < surface)
+				surfaceMax = surface;
+		}
+
+		return surfaceMax;
 	}
 }
