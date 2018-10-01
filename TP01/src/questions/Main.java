@@ -9,12 +9,10 @@ import java.util.Stack;
 
 public class Main {
 
-	final static String[] nameFile = { "ex_N0_res10000", "ex_N2_res10000", "ex_N5_res153", "ex_N10_res24400144",
+	public final static String[] nameFile = { "ex_N0_res10000", "ex_N2_res10000", "ex_N10_res24400144",
 			"ex_N100_res5980", "ex_N100_res6741", "ex_N500_res7616", "ex_N500_res7854", "ex_N100000_res100000",
 			"ex_N200000_res75141975", "ex=_N100000_res10000000", "ex=_N200000_res20000000", "exCodeChef_N5_res49997500",
 			"exT_N100000_res30011389", "exT_N200000_res75141975" };
-
-//	private final static String[] nameFile = { "ex_N5_res153" };
 
 	public static void main(String[] args) {
 
@@ -23,7 +21,6 @@ public class Main {
 		int index;
 		long start;
 
-		Point points[];
 		String line;
 		String[] parts;
 
@@ -31,7 +28,7 @@ public class Main {
 		FileReader fr;
 		BufferedReader br;
 
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb;
 
 		for (int i = 0; i < nameFile.length; i++) {
 
@@ -50,7 +47,7 @@ public class Main {
 					line = br.readLine();
 					parts = line.split(" ");
 
-					points = new Point[Integer.parseInt(parts[0]) + 2];
+					Point points[] = new Point[Integer.parseInt(parts[0]) + 2];
 
 					points[0] = new Point(0, 0);
 
@@ -77,14 +74,16 @@ public class Main {
 					sb.append(": Max surface = ");
 					start = System.currentTimeMillis();
 //					sb.append(rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
-//					sb.append(rechMaxSurfRectCubique(h, points));
-//					sb.append(rechMaxSurfRectQuadratique(h, points));
-					sb.append(rechercheLinéaire(points, h));
+//					sb.append("Recherche cubique :" + rechMaxSurfRectCubique(h, points));
+//					sb.append("Recherche quadratique " + rechMaxSurfRectQuadratique(h, points));
+//					sb.append("Recherche Diviser pour regner : " + rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
+					sb.append("Rechercher linéaire : " + rechMaxSurfRectLineaire(l, h, points));
 					sb.append(" find in ");
 					sb.append(System.currentTimeMillis() - start);
 					sb.append(" ms.");
 
 					System.out.println(sb.toString());
+
 				} catch (IOException exception) {
 					System.out.println("Erreur lors de la lecture : " + exception.getMessage());
 				}
@@ -106,6 +105,10 @@ public class Main {
 		int surface;
 		int hauteurMin;
 		int surfaceMax = 0;
+
+		// Case de base, aucune point
+		if (points.length == 2)
+			return points[1].getX() * h;
 
 		for (int i = 0; i < points.length; i++) {
 			for (int j = i + 1; j < points.length; j++) {
@@ -206,64 +209,63 @@ public class Main {
 	}
 
 	/**
-	 * Recherche l'aire maximale d'un rectangle avec un algorithme en O(n)
+	 * Recherche de la plus grande surface d'un rectangle dans le plan en O(n)
 	 * 
-	 * @param points les points du graphe
-	 * @param h      la hauteur du graphe
-	 * @return l'aire maximale d'un rectangle du graphe
+	 * @param l      la largeur du plan
+	 * @param h      la hauteur maximale du plan
+	 * @param points les points du plan
+	 * @return l'aire maximale d'un rectangle du plan
 	 */
-	public static int rechercheLinéaire(Point points[], int h) {
-		Stack<Point> pile = new Stack<Point>();
-		int aireMax = 0;
+	public static int rechMaxSurfRectLineaire(int l, int h, Point points[]) {
 
-		// On ajoute directement le premier point (0,0)
-		pile.push(points[0]);
+		Stack<Integer> pile = new Stack<>();
 
-		// POUR CHAQUE POINT de 1 à n-1
-		for (int i = 1; i < points.length; i++) {
-			
-			// SI [le point décroit en ordonnée]
-			Point top = pile.peek();
-			if (points[i].getY() < top.getY()) {
-				int hauteurMin = h;
-				
-				// TANT QUE la pile n'est pas vide
-				while (!pile.empty()) {
-					// Retirer le sommet (pop)
-					top = pile.pop();
-					
-					// Je calcule l'aire du rectangle entre point[i] et le point qui a été "poppé"
-					int aire = (points[i].getX() - top.getX()) * hauteurMin;
-					
-					// VERIFIER si aire max change
-					if(aire > aireMax) {
-						aireMax = aire;
-					}
-					
-					// La hauteur minimale devient l'ordonnée du point poppé
-					hauteurMin = top.getY();
+		int surfaceMax = 0;
+		int indexHauteurMax;
+		int surface;
+
+		int index = 0;
+
+		// Si on n'a que les points (0,0) et (l,0)
+		if (points.length <= 2) {
+			return l * h;
+		}
+
+		while (index < points.length) {
+
+			if (index > 1) {
+				surface = (points[index].getX() - points[index - 1].getX()) * h;
+				if (surfaceMax < surface)
+					surfaceMax = surface;
+			}
+
+			if (pile.empty() || points[pile.peek()].getY() <= points[index].getY()) {
+				pile.push(index);
+				index++;
+			} else {
+				indexHauteurMax = pile.pop();
+
+				if (!pile.empty()) {
+					surface = points[indexHauteurMax].getY() * (points[index].getX() - points[pile.peek()].getX());
+
+					if (surfaceMax < surface)
+						surfaceMax = surface;
 				}
-				
 			}
-			
-			// Ajouter le point courant dans la pile 
-			pile.push(points[i]);
 		}
-		// VIDER la pile s'il reste des trucs
-		// RETIRER dernier point (à n-1)
-		Point last = pile.pop();
-		int hauteurMin = h;
-		while(!pile.empty()) {
-			Point top = pile.pop();
-			int aire = (last.getX() - top.getX()) * hauteurMin;
-			// VERIFIER si aire max change
-			if(aire > aireMax) {
-				aireMax = aire;
+
+		while (!pile.empty()) {
+			indexHauteurMax = pile.pop();
+
+			if (!pile.empty()) {
+				surface = points[indexHauteurMax].getY()
+						* (points[indexHauteurMax - 1].getX() - points[pile.peek()].getX());
+
+				if (surfaceMax < surface)
+					surfaceMax = surface;
 			}
-			// La hauteur minimale devient l'ordonnée du point poppé
-			hauteurMin = top.getY();
 		}
-		
-		return aireMax;
+
+		return surfaceMax;
 	}
 }
