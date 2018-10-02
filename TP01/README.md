@@ -7,7 +7,7 @@ les contraintes a nécessairement deux sommets de la forme (xi; 0); (xj ; 0) ave
 (Pourquoi ?)
 
 En se référençant à l'énoncé, ``On souhaite dessiner un rectangle dont la base est sur l’axe des x dans le plan déterminé par le rectangle (0,0) (0,h) (l,h) (l,0)``.  Par conséquent, deux des sommets du rectangle de surface maximale trouvé ont une ordonnée égale à 0.
-
+	
 ### Résultats en O(n³)
 - ***ex_N0_res10000:*** Max surface = 10000 find in **0** ms.
 - ***ex_N2_res10000:*** Max surface = 10000 find in **0** ms.
