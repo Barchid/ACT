@@ -73,11 +73,11 @@ public class Main {
 					sb.append(nameFile[i]);
 					sb.append(": Max surface = ");
 					start = System.currentTimeMillis();
-//					sb.append(rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
+					sb.append(rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
 //					sb.append("Recherche cubique :" + rechMaxSurfRectCubique(h, points));
 //					sb.append("Recherche quadratique " + rechMaxSurfRectQuadratique(h, points));
 //					sb.append("Recherche Diviser pour regner : " + rechMaxSurfRectDiviserRegner(points, 0, points.length - 1, h));
-					sb.append("Rechercher linéaire : " + rechMaxSurfRectLineaire(l, h, points));
+//					sb.append("Rechercher linéaire : " + rechMaxSurfRectLineaire(l, h, points));
 					sb.append(" find in ");
 					sb.append(System.currentTimeMillis() - start);
 					sb.append(" ms.");
