@@ -1,4 +1,4 @@
-# ACT : TP n°01
+# ACT : TP n°01 - Sami BARCHID  & Anthony SLIMANI
 
 ## Question 1
 
@@ -67,7 +67,7 @@ Il reste à calculer l'aire maximale des rectangles à droite et à gauche du mi
 Un rectangle d'aire maximale peut avoir des sommets se trouvant à la fois à gauche et à droite du minimum. Ce rectangle aurait d'office comme hauteur, la valeur de l'ordonnée du point minimum et, comme largeur, la distance entre les bornes de gauche et de droite de l'ensemble calculé.
 
 ### Constatation
-Par rapport à des 
+Par rapport à des
 
 ### Résultats de l'algorithme
 - ***ex_N0_res10000:*** Max surface = 10000 find in **0** ms.
@@ -88,18 +88,18 @@ Par rapport à des
 ### Complexité
 La division de l'algorithme n'est pas une division constante (comme pour le tri dichotomique où les deux parties valent exactement n/2). Néanmoins, on peut tirer, en moyenne, que l'ensemble des n points est divisé par 2 puisque les sous-ensembles se complètent tous les deux.
 
-Nous obtenons donc que ``T(n) = 2*T(n/2) + n`` et ``T(0) = 0`` où
+Nous obtenons donc que ``T(n) = 2*T(n/2) + O(n)`` où
 - n est le nombre de points dans le plan
-- T(n) est le nombre d'opérations pour la recherche de l'aire du plus grand rectangle dans le plan de n points
+- T(n) est le nombre d'appels pour la recherche de l'aire du plus grand rectangle dans le plan de n points
 
-*Note : Le ``+ n`` provient de la recherche du minimum.*
+*Note : Le ``O(n)`` provient de la recherche du minimum.*
 
-Nous pouvons appliquer le Master Theorem avec les valeurs :
+Nous pouvons appliquer le deuxième cas du Master Theorem avec les valeurs :
 - k = 2
 - b = 2
 - d = 1
 
-Donc : **O(n*log n)** dans le meilleur comme dans le pire des cas.
+Donc : **Θ(n log n)**, on en conclu donc que la complexité reste la même dans le meilleur et pire des cas
 
 
 ## Question 3
@@ -108,19 +108,19 @@ Réduire la hauteur à une petite valeur peut améliorer les performances de la 
 *Question non implémentée.*
 
 ## Question 4
-L'algorithme consiste à parcourir, une seule et unique fois, tous les points de gauche à droite par rapport à l'axe des abscisses. 
+L'algorithme consiste à parcourir, une seule et unique fois, tous les points de gauche à droite par rapport à l'axe des abscisses.
 
 On suppose que le tableau de points en paramètre de cette fonction est trié par rapport aux abscisses ces points.
 
-Lors du parcours, on utilisera une pile pour parvenir à résoudre ce problème avec une complexité temporelle en O(n). 
+Lors du parcours, on utilisera une pile pour parvenir à résoudre ce problème avec une complexité temporelle en O(n).
 
-Premièrement, on calcule le rectangle de hauteur h et de longueur égale à la distance du point courant avec le point précédent. 
+Premièrement, on calcule le rectangle de hauteur h et de longueur égale à la distance du point courant avec le point précédent.
 
-Si la surface calculée est la plus grande qu'on a pu apercevoir durant le parcours, on le mémorise dans une variable qui sera le résultat final de notre fonction. 
-Puis, si la pile est vide ou que l'ordonnée du point au sommet de la pile est plus grande que celle du point courant, on empile celui-ci. 
+Si la surface calculée est la plus grande qu'on a pu apercevoir durant le parcours, on le mémorise dans une variable qui sera le résultat final de notre fonction.
+Puis, si la pile est vide ou que l'ordonnée du point au sommet de la pile est plus grande que celle du point courant, on empile celui-ci.
 
-En revanche, lorsque le point courant ne respecte pas cette dernière condition, on dépile le point au sommet de la pile puis on calcule la surface du rectangle avec 
-comme hauteur l'abscisse du point qu'on vient juste de retirer et comme la longueur la distance entre le point courant et le nouveau sommet de pile. 
+En revanche, lorsque le point courant ne respecte pas cette dernière condition, on dépile le point au sommet de la pile puis on calcule la surface du rectangle avec
+comme hauteur l'abscisse du point qu'on vient juste de retirer et comme la longueur la distance entre le point courant et le nouveau sommet de pile.
 
 Puis de nouveau, on vérifie que la surface calculée est la plus grande qu'on a calculée durant ce parcours.
 
