@@ -66,9 +66,6 @@ Il reste à calculer l'aire maximale des rectangles à droite et à gauche du mi
 #### Fusion
 Un rectangle d'aire maximale peut avoir des sommets se trouvant à la fois à gauche et à droite du minimum. Ce rectangle aurait d'office comme hauteur, la valeur de l'ordonnée du point minimum et, comme largeur, la distance entre les bornes de gauche et de droite de l'ensemble calculé.
 
-### Constatation
-Par rapport à des
-
 ### Résultats de l'algorithme
 - ***ex_N0_res10000:*** Max surface = 10000 find in **0** ms.
 - ***ex_N2_res10000:*** Max surface = 10000 find in **0** ms.
