@@ -66,9 +66,6 @@ Il reste à calculer l'aire maximale des rectangles à droite et à gauche du mi
 #### Fusion
 Un rectangle d'aire maximale peut avoir des sommets se trouvant à la fois à gauche et à droite du minimum. Ce rectangle aurait d'office comme hauteur, la valeur de l'ordonnée du point minimum et, comme largeur, la distance entre les bornes de gauche et de droite de l'ensemble calculé.
 
-### Constatation
-Par rapport à des
-
 ### Résultats de l'algorithme
 - ***ex_N0_res10000:*** Max surface = 10000 find in **0** ms.
 - ***ex_N2_res10000:*** Max surface = 10000 find in **0** ms.
@@ -88,18 +85,18 @@ Par rapport à des
 ### Complexité
 La division de l'algorithme n'est pas une division constante (comme pour le tri dichotomique où les deux parties valent exactement n/2). Néanmoins, on peut tirer, en moyenne, que l'ensemble des n points est divisé par 2 puisque les sous-ensembles se complètent tous les deux.
 
-Nous obtenons donc que ``T(n) = 2*T(n/2) + O(n)`` où
+Nous obtenons donc que ``T(n) = 2T(n/2) + O(n)`` où
 - n est le nombre de points dans le plan
-- T(n) est le nombre d'appels pour la recherche de l'aire du plus grand rectangle dans le plan de n points
+- T(n) est la complexité temporelle sous la forme d'une relation de récurrence pour la recherche de l'aire du plus grand rectangle dans le plan de n points
 
 *Note : Le ``O(n)`` provient de la recherche du minimum.*
 
-Nous pouvons appliquer le deuxième cas du Master Theorem avec les valeurs :
-- k = 2
+Nous pouvons appliquer le Master Theorem : T(n) = aT(n/b) + f(n) avec les valeurs :
+- a = 2
 - b = 2
-- d = 1
 
-Donc : **Θ(n log n)**, on en conclu donc que la complexité reste la même dans le meilleur et pire des cas
+- Deuxième cas : Θ(n^c log n) avec c = log b (a) = log 2 (2) = 1
+Donc : **Θ(n log n)**, on en conclu donc que la complexité temporelle reste la même dans le meilleur et pire des cas.
 
 
 ## Question 3
