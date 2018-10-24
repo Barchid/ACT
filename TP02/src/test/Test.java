@@ -1,10 +1,48 @@
-package questions;
+package test;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Scanner;
 
-public class Combinaison {
+enum Couleur {
+	BLANC('P', -1), NOIR('p', 1), ESPACE(' ', 0);
+
+	private char caractere;
+	private int sens;
+
+	private Couleur(char caractere, int sens) {
+		this.caractere = caractere;
+		this.sens = sens;
+	}
+
+	public char getCaractere() {
+		return this.caractere;
+	}
+
+	public int getSens() {
+		return sens;
+	}
+
+	/**
+	 * Retourne la couleur opposee a la couleur courante.
+	 * 
+	 * @return la couleur opposee a la couleur courante
+	 */
+	public Couleur getOpposite() {
+		switch (this) {
+		case BLANC:
+			return NOIR;
+		case NOIR:
+			return BLANC;
+		default:
+			return ESPACE;
+		}
+	}
+}
+
+class Combinaison {
 
 	private char[][] tableau; // Tableau de caracteres
 	private String code; // Identifiant de la configuration (concatenation des caracteres du tableau)
@@ -225,7 +263,6 @@ public class Combinaison {
 		return (ligne >= 0 && ligne < this.tableau.length) && (colonne >= 0 && colonne < this.tableau[0].length);
 	}
 
-	@Override
 	public int hashCode() {
 		// hashcode base sur le code et le joueur courant
 		final int prime = 31;
@@ -235,7 +272,6 @@ public class Combinaison {
 		return result;
 	}
 
-	@Override
 	public boolean equals(Object obj) {
 		// Equals base sur le code et le joueur courant
 		if (this == obj)
@@ -371,6 +407,53 @@ public class Combinaison {
 		// SINON (joueur courant perd)
 		else {
 			return Math.abs(maxNegatif) + 1;
+		}
+	}
+}
+
+/*
+ * Test 1 Succès (0.104s) 
+ * Test 2 Succès (0.1s) 
+ * Test 3 Succès (0.136s) 
+ * Test 4 Succès (0.18s) 
+ * Test 5 Succès (0.176s) 
+ * Test 6 Succès (2.176s) 
+ * Test 7 Succès (4.164s) 
+ * Test 8 Succès (0.124s)
+ */
+class Test {
+	public static void main(String[] args) {
+		Scanner sc = null;
+		try {
+			sc = new Scanner(System.in);
+			int lignes = Integer.parseInt(sc.nextLine().trim());
+			int colonnes = Integer.parseInt(sc.nextLine().trim());
+			char[][] combi = new char[lignes][colonnes];
+
+			int i = 0;
+
+			while (sc.hasNextLine() && i < lignes) {
+				String line = sc.nextLine();
+
+				char[] ligne = new char[colonnes];
+				int j = 0;
+				for (; j < line.length() && j < colonnes; j++)
+					ligne[j] = line.charAt(j);
+
+				for (; j < colonnes; j++)
+					ligne[j] = ' ';
+
+				combi[i] = ligne;
+				i++;
+			}
+
+			Combinaison initiale = new Combinaison(combi, Couleur.BLANC);
+			Map<Combinaison, Integer> memo = new HashMap<Combinaison, Integer>();
+
+			// Affichage resultat
+			System.out.println(initiale.trouverCoupsMemo(memo));
+		} finally {
+			sc.close();
 		}
 	}
 }
