@@ -12,6 +12,8 @@ public class Combinaison {
 
 	public Combinaison(char[][] tableau, Couleur joueur) {
 		this.tableau = tableau;
+
+		// Construction du code de la configuration
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < tableau.length; i++) {
 			for (int j = 0; j < tableau[i].length; j++) {
@@ -22,6 +24,12 @@ public class Combinaison {
 		this.joueur = joueur;
 	}
 
+	/**
+	 * Retourne la couleur adéquate suivant le caractère spécifié.
+	 * 
+	 * @param p le caractère spécifié
+	 * @return la couleur adéquate
+	 */
 	private Couleur getCouleurOfChar(char p) {
 		switch (p) {
 		case 'p':
@@ -57,8 +65,7 @@ public class Combinaison {
 
 		// SI [adversaire deja chez moi]
 		for (int i = 0; i < this.getNbColonnes(); i++) {
-			
-			//TODO : refactor
+
 			if (this.joueur == Couleur.BLANC) {
 				if (this.getCase(this.getNbLignes() - 1, i) == Couleur.NOIR) {
 					return possibilites;
@@ -75,7 +82,7 @@ public class Combinaison {
 		for (int i = 0; i < this.getNbLignes(); i++) {
 			for (int j = 0; j < this.getNbColonnes(); j++) {
 
-				// SI [case courante est de la couleur du joueur] # sinon on s'en fiche
+				// SI [case courante est de la couleur du joueur] # sinon on ignore
 				if (this.getCase(i, j) == this.joueur) {
 
 					// SI [case peut manger un ennemi à gauche]
@@ -218,9 +225,9 @@ public class Combinaison {
 		return (ligne >= 0 && ligne < this.tableau.length) && (colonne >= 0 && colonne < this.tableau[0].length);
 	}
 
-	// hashcode basé sur le code et le joueur courant
 	@Override
 	public int hashCode() {
+		// hashcode basé sur le code et le joueur courant
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((code == null) ? 0 : code.hashCode());
@@ -228,9 +235,9 @@ public class Combinaison {
 		return result;
 	}
 
-	// Equals basé sur le code et le joueur courant
 	@Override
 	public boolean equals(Object obj) {
+		// Equals basé sur le code et le joueur courant
 		if (this == obj)
 			return true;
 		if (obj == null)
@@ -247,14 +254,11 @@ public class Combinaison {
 			return false;
 		return true;
 	}
-	
-//	########################################################################################################
-//	########################################################################################################
-//	########################################################################################################
-//	########################################################################################################
-//	########################################################################################################
-//	Algorithmes
-	
+
+	// ----------------------------------------------------------------------
+	// Algorithmes
+	// ----------------------------------------------------------------------
+
 	public int trouverCoupsNaif() {
 		// CONSTRUIRE tableau des combinaisons possibles après un tour
 		List<Combinaison> possibilites = this.calculerPossibilites();
@@ -330,11 +334,16 @@ public class Combinaison {
 
 			// CALCULER valeur de la possibilité (récursivité)
 			int valCombi = 0;
+
+			// SI [la combinaison possible a déjà été calculée]
 			if (memo.containsKey(possibilite)) {
 				valCombi = memo.get(possibilite);
-			} else {
+			}
+			// SINON
+			else {
 				valCombi = possibilite.trouverCoupsMemo(memo);
-				memo.put(possibilite, valCombi);
+				memo.put(possibilite, valCombi); // AJOUTER le résultat dans le dictionnaire
+				System.out.print(memo.size() + "\r");
 			}
 
 			// SI [Tout positif]
@@ -355,12 +364,12 @@ public class Combinaison {
 			}
 		}
 
-		// SI [tout le monde est positif] (je vais gagner)
+		// SI [tout le monde est positif] (joueur courant gagne)
 		if (tousPositif) {
 			// RETOURNER - (maxPositif +1)
 			return -(maxPositif + 1); // application de la formule naïve pour tous positif
 		}
-		// SINON (je vais perdre)
+		// SINON (joueur courant perd)
 		else {
 			return Math.abs(maxNegatif) + 1;
 		}
