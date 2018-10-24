@@ -23,3 +23,11 @@ Ce travail pratique représente la solution apportée au problème "Hexapawn".
 ### Formule dans le cas où au moins un des successeurs est négatif
 - Soit ``E``, l'ensemble des configurations successeurs possibles.
 ``configuration = |MaxDesNegatifs(E)| + 1``
+
+## Contenu des sources
+
+### package "questions"
+Package principale de la solution. Contient l'algorithme et la classe main qui a servie aux tests.
+
+### package "test"
+Package contenant un fichier, Test.java, utilisé pour faire fonctionner les tests sur la plate-forme.
