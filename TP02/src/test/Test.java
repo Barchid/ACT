@@ -27,6 +27,7 @@ enum Couleur {
 
 	/**
 	 * Retourne la couleur opposee a la couleur courante.
+	 * 
 	 * @return la couleur opposee a la couleur courante
 	 */
 	public Couleur getOpposite() {
@@ -40,7 +41,6 @@ enum Couleur {
 		}
 	}
 }
-
 
 class Combinaison {
 
@@ -412,16 +412,15 @@ class Combinaison {
 }
 
 /*
- * Test 1 	Succès (0.104s)
-Test 2 	Succès (0.1s)
-Test 3 	Succès (0.136s)
-Test 4 	Succès (0.18s)
-Test 5 	Succès (0.176s)
-Test 6 	Succès (2.176s)
-Test 7 	Succès (4.164s)
-Test 8 	Succès (0.124s) 
+ * Test 1 Succès (0.104s) 
+ * Test 2 Succès (0.1s) 
+ * Test 3 Succès (0.136s) 
+ * Test 4 Succès (0.18s) 
+ * Test 5 Succès (0.176s) 
+ * Test 6 Succès (2.176s) 
+ * Test 7 Succès (4.164s) 
+ * Test 8 Succès (0.124s)
  */
-
 class Test {
 	public static void main(String[] args) {
 		Scanner sc = null;
@@ -432,7 +431,7 @@ class Test {
 			char[][] combi = new char[lignes][colonnes];
 
 			int i = 0;
-			
+
 			while (sc.hasNextLine() && i < lignes) {
 				String line = sc.nextLine();
 
@@ -440,7 +439,7 @@ class Test {
 				int j = 0;
 				for (; j < line.length() && j < colonnes; j++)
 					ligne[j] = line.charAt(j);
-				
+
 				for (; j < colonnes; j++)
 					ligne[j] = ' ';
 
@@ -453,8 +452,7 @@ class Test {
 
 			// Affichage resultat
 			System.out.println(initiale.trouverCoupsMemo(memo));
-		}
-		finally {
+		} finally {
 			sc.close();
 		}
 	}
