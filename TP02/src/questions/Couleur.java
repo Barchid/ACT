@@ -20,8 +20,8 @@ public enum Couleur {
 	}
 
 	/**
-	 * Retourne la couleur opposée à la couleur courante.
-	 * @return la couleur opposée à la couleur courante
+	 * Retourne la couleur opposee a la couleur courante.
+	 * @return la couleur opposee a la couleur courante
 	 */
 	public Couleur getOpposite() {
 		switch (this) {
