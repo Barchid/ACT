@@ -84,5 +84,4 @@ public class Main {
 		certif = generateNewCertificate(certif);
 		System.out.println(Arrays.toString(certif));
 	}
-
 }

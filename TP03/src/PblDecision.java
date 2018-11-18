@@ -1,4 +1,4 @@
 
-public abstract class PbDecision {
+public abstract class PblDecision {
 	public abstract boolean aUneSolution();
 }
