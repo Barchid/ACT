@@ -17,10 +17,10 @@ public class PblTSP extends PblDecision {
 		CertificatTSP certificat = new CertificatTSP(this);
 		certificat.reset();
 		while (certificat != null) {
-			certificat.suivant();
 			if (certificat.estCorrect()) {
 				return true;
 			}
+			certificat.suivant();
 		}
 		return false;
 	}
