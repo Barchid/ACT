@@ -19,22 +19,15 @@ class PblCycleHamilton extends PblDecision {
 		// INITIALISER toutes les distances a 1
 		for (int i = 0; i < this.matrice.length; i++) {
 			for (int j = 0; j < this.matrice[0].length; j++) {
-				distances[i][j] = 1;
+				// distances[i][j] = 0 SI il y a un arc entre i et j
+				// SINON 1
+				distances[i][j] = this.matrice[i][j] ? 0 : 1;
 			}
 		}
 
-		// SI il y a un arc entre n-1 et 0, distance = 0
-		if (this.matrice[this.n - 1][0]) {
-			distances[this.n - 1][0] = 0;
-		}
-
-		// distance(i,i+1) = 0 s'il y a un arc entre sommets i et i+1
-		for (int i = 0; i < this.n - 2; i++) {
-			if (this.matrice[i][i + 1]) {
-				distances[i][i + 1] = 0;
-			}
-		}
-
+		// n = n
+		// l = 0
+		// D = distances
 		return new PblTSP(this.n, distances, 0);
 	}
 

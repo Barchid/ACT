@@ -1,5 +1,8 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
@@ -34,7 +37,9 @@ class CertificatTSP implements Certificat {
 				num = scanner.nextInt();
 			}
 			this.tableau[i] = num;
+			used.add(num);
 		}
+		scanner.close();
 	}
 
 	@Override
@@ -44,22 +49,27 @@ class CertificatTSP implements Certificat {
 
 	@Override
 	public void alea() {
-		Set<Integer> used = new HashSet<Integer>();
 		Random r = new Random();
+		
+		// CREER une liste des entiers a utiliser
+		List<Integer> toUse = new ArrayList<Integer>();
+		for(int i=0;i<this.tableau.length;i++) {
+			toUse.add(i);
+		}
+		
 		// POUR CHAQUE element du tableau
 		for (int i = 0; i < this.tableau.length; i++) {
+			
 			// TROUVER un nombre aleatoire non utilise
-			int aleatoire = r.nextInt(this.tableau.length);
-			while (used.contains(aleatoire)) {
-				aleatoire = r.nextInt(this.tableau.length);
-			}
-			used.add(aleatoire);
+			int aleatoire = r.nextInt(toUse.size());
 
 			// AJOUTER l'aleatoire dans le tableau
-			this.tableau[i] = aleatoire;
+			this.tableau[i] = toUse.get(aleatoire);
+			
+			toUse.remove(aleatoire);
 		}
 	}
-
+	
 	@Override
 	public void reset() {
 		// Le premier element de l'ordre choisi est toujours compose des elements de 0 a

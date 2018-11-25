@@ -16,20 +16,26 @@ class PblCheminHamilton extends PblDecision {
 	 * @return le probleme CycleHamilton genere
 	 */
 	public PblCycleHamilton redPolyToCycleHamilton() {
-		boolean[][] newMatrice = new boolean[this.n][this.n];
+		// On reprend le graphe du chemin et on y ajoute un sommet 'FIN', qui est pointe
+		// par tous les autres sommets et pointe tous les autres sommets
+		boolean[][] matriceCycle = new boolean[this.n + 1][this.n + 1]; // matrice pour gerer le sommet FIN en +
 
-		// Recopier la matrice du probleme de chemin hamiltonien
-		for (int i = 0; i < this.matrice.length; i++) {
-			for (int j = 0; j < this.matrice[0].length; j++) {
-				newMatrice[i][j] = this.matrice[i][j];
+		// RECOPIER matrice DANS matriceCycle
+		for (int i = 0; i < this.n; i++) {
+			for (int j = 0; j < this.n; j++) {
+				matriceCycle[i][j] = this.matrice[i][j];
 			}
 		}
 
-		// SI il y a un arc dans le Chemin Hamiltonien entre n-1 et 0, il n'y en a pas
-		// dans le cycle correspondant
-		newMatrice[n - 1][0] = !this.matrice[this.n - 1][0];
+		// Gestion du sommet FIN
+		for (int i = 0; i < this.n; i++) {
+			// RAJOUTER UN ARC DE fin VERS i
+			matriceCycle[this.n][i] = true;
+			// RAJOUTER UN ARC DE i VERS fin
+			matriceCycle[i][this.n] = true;
+		}
 
-		return new PblCycleHamilton(this.n, newMatrice);
+		return new PblCycleHamilton(this.n + 1, matriceCycle);
 	}
 
 	/**
@@ -38,10 +44,12 @@ class PblCheminHamilton extends PblDecision {
 	 * @return
 	 */
 	public PblTSP redPolyToTSP() {
-		return null;
+		// on utilise le fait que la relation de reduction polynomiale soit transitive
+		return this.redPolyToCycleHamilton().redPolyToTSP();
 	}
 
 	public boolean aUneSolution() {
-		return false;
+		// il suffit de transformer le probleme en un probleme TSP et de verifier si le probleme transforme a une solution
+		return this.redPolyToTSP().aUneSolution();
 	}
 }
