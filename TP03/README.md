@@ -1,4 +1,5 @@
 
+
 # Rendu TP n°03
 
 ## Qu'est-ce qu'une propriété NP ?
@@ -65,7 +66,7 @@ Pseudo-code :
     		certificat = certificat suivant
     RETOURNER faux
 
-En bref, l'algorithme consiste à tester toutes les combinaisons de certificats possibles à partir du premier élément de l'ordre choisi et en passant au suivant à chaque itération. Sa complexité est donc factorielle.
+En bref, l'algorithme consiste à tester toutes les combinaisons de certificats possibles à partir du premier élément de l'ordre choisi et en passant au suivant à chaque itération. Sa complexité est donc **factorielle**.
 
 ---
 
@@ -158,9 +159,11 @@ Voir le code.
 La relation ``<=p`` (réduction polynomiale) est transitive : comme ``HamiltonPath <=p HamiltonCycle`` et ``HamiltonCycle <=p TSP``, on déduit que ``HamiltonPath <=p TSP``
 
 ### Question 04 : complexité des propriétés Hamilton dans un graphe non-dirigé
-TODO
+Dans un graphe non-dirigé, le nombre d'arcs est deux fois moins important que dans sa version dirigée. De ce fait, le nombre de cycles/chemins possibles, qui est de l'ordre de (n-1)! dans un graphe dirigé sera de (n-1)!/2 dans un graphe non-dirigé.
 
+Par conséquent, même si le nombre de possibilités est réduit, nous restons dans un problème **NP-dur** (voir NP-complet).
 
+---
 
 ## Propriétés versus Problèmes d'optimisation
 
@@ -189,4 +192,7 @@ Ainsi, la complexité de ``TSPOpt1`` est au plus ``(somme des distances) * compl
 ---
 
 ### Question 07 : Si TSP était P, TSPOpt2 le serait aussi
-TODO
+Si le problème de décision TSP était P, nous aurions le problème d'optimisation TSPOpt2 P également. En effet, nous pourrions trouver TSPOpt2.
+
+Nous devrions d'abord trouver la longueur minimale possible (avec TSPOpt1 qui serait P, comme prouvé dans la question précédente). Ensuite, tant qu'on n'a pas trouvé la tournée complète, on choisit un des sommets et on teste s'il existe une tournée de longueur minimale contenant le sommet choisi (``TSP``). De ce fait, on construit la tournée optimale en temps polynomial.
+    
