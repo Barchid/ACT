@@ -3,10 +3,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class TestTSP {
+public class TestHam {
 	public static void main(String[] arg) throws Exception {
-		CertificatTSP certificat = null;
-		PblTSP problem = null;
+		PblCycleHamilton problem = null;
 		if (arg.length < 3) {
 			System.out.println("java test mode file.atsp lg");
 			return;
@@ -16,16 +15,15 @@ public class TestTSP {
 			// lire l’instance du probleme dans le fichier de donnees dont le nom est en
 			// argument et créer l’instance du probleme...
 			problem = lireFichier(arg[1], lg);
-			certificat = new CertificatTSP(problem);
 		}
 		// les differents modes
 		if (arg[0].equals("-verif")) {
 			// lire un cetificat proposé, sortir le résultat de la vérification
-			modeVerif(certificat);
+			System.out.println("On n'a pas ça ici !");
 		} else if (arg[0].equals("-nondet")) {
 			// générer aléatoirement un certificat
 			// sortir le résultat de la vérification et evt le certificat
-			modeNonDet(certificat);
+			System.out.println("On n'a pas ça ici !");
 		} else if (arg[0].equals("-exhaust")) {
 			// générer tous les certificats jusqu’au dernier ou jusqu’à un trouver un de
 			// valide
@@ -36,7 +34,7 @@ public class TestTSP {
 			System.out.println("erreur de mode");
 	}
 
-	private static PblTSP lireFichier(String filename, int l) throws IOException {
+	private static PblCycleHamilton lireFichier(String filename, int l) throws IOException {
 		File fichier = new File(filename);
 		FileReader reader = new FileReader(fichier);
 		BufferedReader br = new BufferedReader(reader);
@@ -54,7 +52,7 @@ public class TestTSP {
 		// On supprime les espaces en trop
 		ligne = ligne.trim();
 		int n = Integer.parseInt(ligne); // On trouve le n
-		int[][] matrice = new int[n][n];
+		boolean[][] matrice = new boolean[n][n];
 
 		// Passer les lignes jusqu'a EDGE_WEIGHT_...
 		while (!ligne.contains("EDGE_WEIGHT_SECTION")) {
@@ -71,47 +69,24 @@ public class TestTSP {
 				for (; idx < ligne.length() && ligne.charAt(idx) == ' '; idx++)
 					;
 
-				// LECTURE du nombre
-				String nbreStr = "";
+				// LECTURE du boolean
+				String booleanStr = "";
 				for (; idx < ligne.length() && ligne.charAt(idx) != ' '; idx++) {
-					nbreStr += ligne.charAt(idx);
+					booleanStr += ligne.charAt(idx);
 				}
-				matrice[i][j] = Integer.parseInt(nbreStr);
+				matrice[i][j] = Boolean.parseBoolean(booleanStr);
 			}
 		}
 		br.close();
-		return new PblTSP(n, matrice, l);
+		return new PblCycleHamilton(n, matrice);
 	}
 
-	private static void modeVerif(CertificatTSP certificat) {
-		certificat.saisie();
-		if (certificat.estCorrect()) {
-			System.out.println("Le certificat entré est correct !");
-		} else {
-			System.out.println("Le certificat entré n'est pas correct !");
-		}
-		certificat.display();
-	}
-
-	private static void modeExhaust(PblTSP pbl) {
+	private static void modeExhaust(PblCycleHamilton pbl) {
 		if (pbl.aUneSolution()) {
 			System.out.println("Le problem posé a une solution !");
-			System.out.println("Le chemin trouvé : ");
-			pbl.getCertifCorrect().display();
 		}
 		else {
 			System.out.println("Probleme n'a pas de solution !");
-		}
-	}
-
-	private static void modeNonDet(CertificatTSP certificat) {
-		certificat.alea();
-		System.out.println("Le certificat aléatoire est le suivant : ");
-		certificat.display();
-		if (certificat.estCorrect()) {
-			System.out.println("Le certificat est correct.");
-		} else {
-			System.out.println("Le certificat est incorrect.");
 		}
 	}
 }

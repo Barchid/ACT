@@ -1,0 +1,13 @@
+NAME:  exe5
+TYPE: ATSP
+COMMENT: 5 city problem , meilleure solution 22
+DIMENSION:  5
+EDGE_WEIGHT_TYPE: EXPLICIT
+EDGE_WEIGHT_FORMAT: FULL_MATRIX 
+EDGE_WEIGHT_SECTION
+ 9999    5    8   10   15   
+ 15  9999    9   2   22     
+ 2    3 9999   72   72  
+48   48   1 9999   22
+ 15   2   22    21 9999     
+

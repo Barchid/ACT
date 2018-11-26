@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -9,8 +8,8 @@ import java.util.Set;
 
 class CertificatTSP implements Certificat {
 
-	// tableau dont les éléments sont les numéros des villes
-	// (représente la permutation entre les villes)
+	// tableau dont les elements sont les numeros des villes
+	// (represente la permutation entre les villes)
 	private int[] tableau;
 
 	// instance du probleme de decision
@@ -25,15 +24,15 @@ class CertificatTSP implements Certificat {
 	@Override
 	public void saisie() {
 		Scanner scanner = new Scanner(System.in);
-		Set<Integer> used = new HashSet<Integer>(); // ensemble des numéros de ville déjà utilisés
+		Set<Integer> used = new HashSet<Integer>(); // ensemble des numeros de ville deja utilises
 		
 		// POUR CHAQUE element du certificat
 		for (int i = 0; i < this.tableau.length; i++) {
-			// scanner un numéro de ville valide
-			System.out.println("Entrez un numéro de ville :");
+			// scanner un numero de ville valide
+			System.out.println("Entrez un numero de ville :");
 			int num = scanner.nextInt();
 			while(num < 0 || num > this.tableau.length || used.contains(num)) {
-				System.out.println("Numéro de ville incorrecte.\nEntrez un numéro de ville :");
+				System.out.println("Numero de ville incorrecte.\nEntrez un numero de ville :");
 				num = scanner.nextInt();
 			}
 			this.tableau[i] = num;
@@ -86,7 +85,7 @@ class CertificatTSP implements Certificat {
 		// Il ne reste qu'a comparer que les elements de 0 a n-1 sont bien tries en
 		// ordre decroissant
 		int j = 0;
-		for (int i = this.tableau.length - 1; i >= 0; i++) {
+		for (int i = this.tableau.length - 1; i >= 0; i--) {
 			if (j != this.tableau[i]) {
 				return false;
 			}
@@ -190,7 +189,7 @@ class CertificatTSP implements Certificat {
 			sum += matrice[this.tableau[i]][this.tableau[i + 1]];
 		}
 
-		// verifier que la somme des distanceq du certificat est <= à la longueur
+		// verifier que la somme des distanceq du certificat est <= a la longueur
 		// maximale autorisee
 		return sum <= this.probleme.getL();
 	}
