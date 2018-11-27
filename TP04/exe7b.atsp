@@ -1,0 +1,15 @@
+NAME:  exe7
+TYPE: ATSP
+COMMENT: 7 city problem, meilleure solution 36
+DIMENSION:  7
+EDGE_WEIGHT_TYPE: EXPLICIT
+EDGE_WEIGHT_FORMAT: FULL_MATRIX 
+EDGE_WEIGHT_SECTION
+ 9999    39    5   48   48    8    80
+ 3 9999    3   48   48    8    8  
+ 5    3 9999   72   72   48   48 
+48   48   74 9999    0    6    16
+   48   48   74    0 9999    6    6   
+    18    8   50    6    6 9999    0
+    8    8   50    6    6    0 9999  
+EOF
