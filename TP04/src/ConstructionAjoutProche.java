@@ -15,7 +15,7 @@ public class ConstructionAjoutProche extends Algorithme {
 
 		// INITIALISER ensemble des villes a utiliser
 		Set<Integer> toUse = new HashSet<Integer>();
-		for (int i = 0; i < this.problem.getN(); i++) {
+		for (int i = 1; i < this.problem.getN(); i++) {
 			toUse.add(i);
 		}
 
