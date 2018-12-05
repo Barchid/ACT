@@ -6,10 +6,8 @@ import java.util.Arrays;
 
 public class Main {
 
-	private static final String[] fichiers = { "exe5.atsp" };/*
-																 * ,"exe7.atsp", "exe7b.atsp", "br17.atsp",
-																 * "bays29.tsp", "bayg29.tsp", "ftv47.atsp" };
-																 */
+	private static final String[] fichiers = { "exe5.atsp", "exe7.atsp", "exe7b.atsp", "br17.atsp", "bays29.tsp",
+			"bayg29.tsp", "ftv47.atsp" };
 
 	public static void main(String[] args) {
 		int i;
@@ -53,6 +51,9 @@ public class Main {
 				PblTsp pbm = new PblTsp(matrice, n);
 				ConstructionAjoutProche construction = new ConstructionAjoutProche(pbm);
 				int[] tournee = construction.algorithme();
+				
+				HillClimbing hillClimbing = new HillClimbing(pbm, tournee);
+				
 				System.out.println(Arrays.toString(tournee));
 				System.out.println(construction.distanceTournee(tournee));
 			} catch (IOException e) {
