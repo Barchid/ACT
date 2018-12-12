@@ -25,7 +25,7 @@ public class HillClimbing extends Algorithme {
 				for (int j = i + 2; j < this.solution.length - 1; j++) {
 					int[] voisin = this.creerVoisin(i, j);
 
-					// distSol = EVALUER DISTANCE DE voisin
+					// distVoisin = EVALUER DISTANCE DE voisin
 					int distVoisin = this.distanceTournee(voisin);
 
 					// SI voisin EST meilleur
