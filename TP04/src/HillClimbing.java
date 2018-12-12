@@ -39,6 +39,7 @@ public class HillClimbing extends Algorithme {
 
 			// SI solution EST LA MEILLEURE
 			if (meilleureSolution) {
+				System.out.println(Arrays.toString(this.solution));
 				return this.solution;
 			}
 		}

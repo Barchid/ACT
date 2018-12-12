@@ -17,7 +17,7 @@ public class Main {
 
 		String param = "--tabou";
 		if (args.length < 1) {
-			System.out.println("Pas d'argument !");
+			System.out.println("Pas d'argument ! Param vaut : " + param);
 		} else {
 			param = args[0];
 		}
@@ -115,8 +115,12 @@ public class Main {
 		int[] tournee = construction.algorithme();
 
 		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
+		
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		tournee = hillClimbing.algorithme();
+		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(tournee));
 
-		Tabou tabou = new Tabou(pbl, tournee, 1, 10);
+		Tabou tabou = new Tabou(pbl, tournee, 500, 1000);
 		tournee = tabou.algorithme();
 
 		System.out.println("Tabou donne : " + tabou.distanceTournee(tournee));

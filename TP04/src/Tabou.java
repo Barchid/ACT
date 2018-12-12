@@ -27,6 +27,9 @@ public class Tabou extends Algorithme {
 		this.limiteIterations = limiteIterations;
 		this.tabous = new LinkedList<Transformation>();
 		this.tabousIndicateur = new HashSet<Transformation>();
+
+		Transformation t1 = new Transformation(1, 2);
+		Transformation t2 = new Transformation(1, 2);
 	}
 
 	@Override
@@ -34,8 +37,14 @@ public class Tabou extends Algorithme {
 		// PARTIR d'une solution bonne
 		int distSolution = this.distanceTournee(this.solution);
 
+		int[] meilleurNonTabou = this.solution;
+		int distMeilleurNonTabou = Integer.MAX_VALUE;
+		Transformation transfoMeilleureNonTabou = null;
+
+		// (Sert à trouver le meilleur voisin non-tabou)
 		// PENDANT LE NOMBRE D'ITERATIONS PARAMETRE...
 		for (int cpt = 0; cpt < this.limiteIterations; cpt++) {
+
 			// TROUVER le meilleur voisin NON-TABOU
 			for (int i = 1; i < this.solution.length - 2; i++) {
 				for (int j = i + 2; j < this.solution.length - 1; j++) {
@@ -48,23 +57,41 @@ public class Tabou extends Algorithme {
 					}
 					// (ici, le voisin est non-tabou)
 
+					// SI [première itération]
+					if (i == 1 && j == 3) {
+						meilleurNonTabou = this.creerVoisin(i, j, meilleurNonTabou);
+						distMeilleurNonTabou = this.distanceTournee(meilleurNonTabou);
+						transfoMeilleureNonTabou = candidatVoisin;
+					}
+
 					// voisin = CREER VOISIN EN (i,j)
-					int[] voisin = this.creerVoisin(i, j);
+					int[] voisin = this.creerVoisin(i, j, meilleurNonTabou);
 
 					// distVoisin = EVALUER DISTANCE DE voisin
 					int distVoisin = this.distanceTournee(voisin);
 
 					// SI voisin EST meilleur
-					if (distVoisin < distSolution) {
+					if (distVoisin < distMeilleurNonTabou) {
 						// AJOUTER voisin DANS TABOU
-						this.ajouterDansTabou(candidatVoisin);
-						distSolution = distVoisin;
-						this.solution = voisin;
+						distMeilleurNonTabou = distVoisin;
+						meilleurNonTabou = voisin;
+						transfoMeilleureNonTabou = candidatVoisin;
 					}
 				}
 			}
+
+			// PLACER meilleur voisin non-tabou DANS file des tabous
+			this.ajouterDansTabou(transfoMeilleureNonTabou);
+
+			// STOCKER l'optimum
+			if (distMeilleurNonTabou < distSolution) {
+				this.solution = meilleurNonTabou;
+				distSolution = distMeilleurNonTabou;
+				System.out.println(Arrays.toString(this.solution) + " avec la valeur = " + distSolution + "||| i = "
+						+ transfoMeilleureNonTabou.i + " et j = " + transfoMeilleureNonTabou.j);
+			}
 		}
-		
+
 		return this.solution;
 	}
 
@@ -87,22 +114,23 @@ public class Tabou extends Algorithme {
 	}
 
 	/**
-	 * Génère le voisin de la solution basé sur le couple (i,j)
+	 * Génère le voisin de la tournee (en param) basé sur le couple (i,j) solution
 	 * 
 	 * @param i
 	 * @param j
+	 * @param tournee
 	 * @return le voisin de la solution basé sur le couple (i,j)
 	 */
-	public int[] creerVoisin(int i, int j) {
+	public int[] creerVoisin(int i, int j, int[] tournee) {
 		// COPIE de solution
-		int[] voisin = Arrays.copyOf(this.solution, this.solution.length);
+		int[] voisin = Arrays.copyOf(tournee, this.solution.length);
 
 		// T'(i+1) = T(j)
-		voisin[i + 1] = this.solution[j];
+		voisin[i + 1] = tournee[j];
 
 		// T'(j+1-p) = T(i + p)
 		for (int p = 1; p < j - i; p++) {
-			voisin[j + 1 - p] = this.solution[i + p];
+			voisin[j + 1 - p] = tournee[i + p];
 		}
 
 		return voisin;
