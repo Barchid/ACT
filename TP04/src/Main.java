@@ -15,6 +15,13 @@ public class Main {
 		String line;
 		int[][] matrice;
 
+		String param = "--tabou";
+		if (args.length < 1) {
+			System.out.println("Pas d'argument ! Param vaut : " + param);
+		} else {
+			param = args[0];
+		}
+
 		for (String fichier : fichiers) {
 			try (BufferedReader br = new BufferedReader(new FileReader(fichier))) {
 
@@ -48,18 +55,87 @@ public class Main {
 					i++;
 				}
 
-				PblTsp pbm = new PblTsp(matrice, n);
-				ConstructionAjoutProche construction = new ConstructionAjoutProche(pbm);
-				int[] tournee = construction.algorithme();
-				
-				HillClimbing hillClimbing = new HillClimbing(pbm, tournee);
-				
-				System.out.println(Arrays.toString(tournee));
-				System.out.println(construction.distanceTournee(tournee));
+				PblTsp pbl = new PblTsp(matrice, n);
+
+				System.out.println("############################################################");
+				System.out.println("Solution du problème : " + fichier);
+
+				switch (param) {
+				case "--ajoutProche":
+					ajoutProche(pbl);
+					break;
+				case "--hillClimbing":
+					hillClimbing(pbl);
+					break;
+				case "--tabou":
+					tabou(pbl);
+					break;
+				case "--recuit":
+					recuit(pbl);
+					break;
+				case "--exacte":
+					exacte(pbl);
+					break;
+				case "--constructionParArc":
+					constructionParArc(pbl);
+					break;
+				}
+				System.out.println("############################################################\n");
+
 			} catch (IOException e) {
 				e.printStackTrace();
 				System.out.println(e.toString());
 			}
 		}
+	}
+
+	private static void ajoutProche(PblTsp pbl) {
+		ConstructionAjoutProche construction = new ConstructionAjoutProche(pbl);
+		int[] tournee = construction.algorithme();
+
+		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
+		System.out.println(Arrays.toString(tournee));
+	}
+
+	private static void hillClimbing(PblTsp pbl) {
+		ConstructionAjoutProche construction = new ConstructionAjoutProche(pbl);
+		int[] tournee = construction.algorithme();
+
+		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
+
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		tournee = hillClimbing.algorithme();
+
+		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(tournee));
+		System.out.println(Arrays.toString(tournee));
+	}
+
+	private static void tabou(PblTsp pbl) {
+		ConstructionAjoutProche construction = new ConstructionAjoutProche(pbl);
+		int[] tournee = construction.algorithme();
+
+		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
+		
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		tournee = hillClimbing.algorithme();
+		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(tournee));
+
+		Tabou tabou = new Tabou(pbl, tournee, 500, 1000);
+		tournee = tabou.algorithme();
+
+		System.out.println("Tabou donne : " + tabou.distanceTournee(tournee));
+		System.out.println(Arrays.toString(tournee));
+	}
+
+	private static void exacte(PblTsp pbl) {
+
+	}
+
+	private static void constructionParArc(PblTsp pbl) {
+
+	}
+
+	private static void recuit(PblTsp pbl) {
+
 	}
 }
