@@ -3,11 +3,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
 
 	private static final String[] fichiers = { "exe5.atsp", "exe7.atsp", "exe7b.atsp", "br17.atsp", "bays29.tsp",
 			"bayg29.tsp", "ftv47.atsp" };
+
+	public static Scanner scanner = new Scanner(System.in);
 
 	public static void main(String[] args) {
 		int i;
@@ -15,7 +18,7 @@ public class Main {
 		String line;
 		int[][] matrice;
 
-		String param = "--tabou";
+		String param = "--recuit";
 		if (args.length < 1) {
 			System.out.println("Pas d'argument ! Param vaut : " + param);
 		} else {
@@ -73,8 +76,11 @@ public class Main {
 				case "--recuit":
 					recuit(pbl);
 					break;
-				case "--exacte":
-					exacte(pbl);
+				case "--exacteGrosLard":
+					exacteGrosLard(pbl);
+					break;
+				case "--exacteTresSimple":
+					exacteTresSimle(pbl);
 					break;
 				case "--constructionParArc":
 					constructionParArc(pbl);
@@ -115,20 +121,35 @@ public class Main {
 		int[] tournee = construction.algorithme();
 
 		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
-		
-		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
-		tournee = hillClimbing.algorithme();
-		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(tournee));
 
-		Tabou tabou = new Tabou(pbl, tournee, 500, 1000);
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(hillClimbing.algorithme()));
+
+		Tabou tabou = new Tabou(pbl, tournee, 100, 100);
 		tournee = tabou.algorithme();
 
 		System.out.println("Tabou donne : " + tabou.distanceTournee(tournee));
 		System.out.println(Arrays.toString(tournee));
 	}
 
-	private static void exacte(PblTsp pbl) {
-
+	private static void exacteGrosLard(PblTsp pbl) {
+		ExactGrosLard exact = new ExactGrosLard(pbl);
+		long debut = System.currentTimeMillis();
+		int[] tournee = exact.algorithme();
+		long fin = System.currentTimeMillis();
+		System.out.println(Arrays.toString(tournee));
+		System.out.println(exact.distanceTournee(tournee));
+		System.out.println("Trouvé en : " + (fin - debut) + "ms");
+	}
+	
+	private static void exacteTresSimle(PblTsp pbl) {
+		ExactTresSimple exact = new ExactTresSimple(pbl);
+		long debut = System.currentTimeMillis();
+		int[] tournee = exact.algorithme();
+		long fin = System.currentTimeMillis();
+		System.out.println(Arrays.toString(tournee));
+		System.out.println(exact.distanceTournee(tournee));
+		System.out.println("Trouvé en : " + (fin - debut) + "ms");
 	}
 
 	private static void constructionParArc(PblTsp pbl) {
@@ -136,6 +157,26 @@ public class Main {
 	}
 
 	private static void recuit(PblTsp pbl) {
+		ConstructionAjoutProche construction = new ConstructionAjoutProche(pbl);
+		int[] tournee = construction.algorithme();
 
+		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
+
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		tournee = hillClimbing.algorithme();
+		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(tournee));
+
+		System.out.println("Choisissez la temperature de base : ");
+		double temperature = scanner.nextDouble();
+
+		System.out.println("Choisissez le refroidissement : ");
+		double refroidissement = scanner.nextDouble();
+
+		System.out.println("Choisissez la limite de temperature pour stopper l'algo : ");
+		double limiteRefroidissement = scanner.nextDouble();
+
+		RecuitSimule recuit = new RecuitSimule(pbl, temperature, refroidissement, limiteRefroidissement, tournee);
+		tournee = recuit.algorithme();
+		System.out.println("Recuit simulé donne : " + recuit.distanceTournee(tournee));
 	}
 }

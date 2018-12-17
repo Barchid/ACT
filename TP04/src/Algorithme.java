@@ -17,7 +17,7 @@ public abstract class Algorithme {
 		int sum = matrice[tournee[n - 1]][tournee[0]];
 
 		// SOMME i=0 -> n-2 D(tour[i], tour[i+1])
-		for (int i = 0; i < n - 2; i++) {
+		for (int i = 0; i < n - 1; i++) {
 			sum += matrice[tournee[i]][tournee[i + 1]];
 		}
 
