@@ -39,6 +39,7 @@ public class ExactGrosLard extends Algorithme {
 			this.choisirSolution(tournee);
 			return;
 		}
+	
 
 		// POUR CHAQUE ville PAS PRISE
 		for (int ville : this.initialiserVillesNonPrises(tournee, n)) {

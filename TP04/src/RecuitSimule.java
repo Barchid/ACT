@@ -6,13 +6,17 @@ public class RecuitSimule extends Algorithme {
 	private double limiteRefroidissement;
 	private int[] solution;
 
+	private boolean traceMode;
+
 	public RecuitSimule(PblTsp problem, double temperature, double refroidissement, double limiteRefroidissement,
-			int[] solution) {
+			int[] solution, boolean traceMode) {
 		super(problem);
 		this.temperature = temperature;
 		this.refroidissement = refroidissement;
 		this.limiteRefroidissement = limiteRefroidissement;
 		this.solution = solution;
+
+		this.traceMode = traceMode;
 	}
 
 	@Override
@@ -64,6 +68,10 @@ public class RecuitSimule extends Algorithme {
 			if (distSolution > distRetenue) {
 				distSolution = distRetenue;
 				this.solution = tourneeRetenue;
+
+				if (this.traceMode) {
+					System.out.println(Arrays.toString(this.solution));
+				}
 			}
 		}
 
@@ -84,28 +92,6 @@ public class RecuitSimule extends Algorithme {
 		// j est un entier pris au hasard entre i + 2 et n - 2
 		int j = (int) (Math.random() * (((tournee.length - 1) - (i + 1)) + 1)) + (i + 1);
 		return this.creerVoisin(i, j, tournee);
-	}
-
-	/**
-	 * Calculer la valeur de delta pour la tournee en paremetre
-	 * (delta=2*max(d(v[i],v[j])))
-	 * 
-	 * @param tournee
-	 * @return la valeur du delta pour la tournee en parametre
-	 */
-	private int calculerDeltaInitial(int[] tournee) {
-		int[][] matrice = this.problem.getMatrice();
-		int delta = 0;
-
-		for (int i = 0; i < matrice.length; i++) {
-			for (int j = 0; j < matrice[0].length; j++) {
-				if (matrice[i][j] > delta) {
-					delta = matrice[i][j];
-				}
-			}
-		}
-
-		return 2 * delta;
 	}
 
 	/**

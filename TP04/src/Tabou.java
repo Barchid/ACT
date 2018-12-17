@@ -6,6 +6,8 @@ import java.util.Set;
 public class Tabou extends Algorithme {
 
 	private int[] solution; // solution bonne sur laquelle part l'algorithme du tabou
+	
+	private boolean traceMode;
 
 	// file du tabou
 	private LinkedList<Transformation> tabous;
@@ -20,13 +22,15 @@ public class Tabou extends Algorithme {
 	// nombre d'iterations limite au bout du quel
 	private int limiteIterations;
 
-	public Tabou(PblTsp problem, int[] tournee, int limiteTabou, int limiteIterations) {
+	public Tabou(PblTsp problem, int[] tournee, int limiteTabou, int limiteIterations, boolean traceMode) {
 		super(problem);
 		this.solution = tournee;
 		this.limiteTabou = limiteTabou;
 		this.limiteIterations = limiteIterations;
 		this.tabous = new LinkedList<Transformation>();
 		this.tabousIndicateur = new HashSet<Transformation>();
+		
+		this.traceMode = traceMode;
 	}
 
 	@Override
@@ -42,14 +46,6 @@ public class Tabou extends Algorithme {
 		// (Sert à trouver le meilleur voisin non-tabou)
 		// PENDANT LE NOMBRE D'ITERATIONS PARAMETRE...
 		for (int cpt = 0; cpt < this.limiteIterations; cpt++) {
-
-			// SI [pas premiere etape]
-			if (cpt != 0) {
-				meilleur = this.creerVoisin(1, 3, meilleur);
-				distMeilleur = this.distanceTournee(meilleur);
-				transfoMeilleur = new Transformation(1, 3);
-				this.ajouterDansTabou(transfoMeilleur);
-			}
 
 			// TROUVER meilleur voisin non tabou
 			// --> POUR CHAQUE [voisin]
@@ -82,6 +78,11 @@ public class Tabou extends Algorithme {
 				// RETENIR le nouvel optimum
 				this.solution = meilleur;
 				distSolution = distMeilleur;
+				
+				if(this.traceMode) {
+					System.out.println(Arrays.toString(this.solution));
+					System.out.println("Avec : " + distSolution);
+				}
 			}
 		}
 

@@ -6,10 +6,13 @@ public class HillClimbing extends Algorithme {
 	 * tournée "bonne" trouvée par un autre algorithme (ConstructionParAjoutProche)
 	 */
 	private int[] solution;
+	
+	private boolean traceMode;
 
-	public HillClimbing(PblTsp problem, int[] solution) {
+	public HillClimbing(PblTsp problem, int[] solution, boolean traceMode) {
 		super(problem);
 		this.solution = solution;
+		this.traceMode = traceMode;
 	}
 
 	@Override
@@ -32,6 +35,11 @@ public class HillClimbing extends Algorithme {
 					if (distVoisin < distSolution) {
 						distSolution = distVoisin;
 						this.solution = voisin;
+						
+						if(this.traceMode) {
+							System.out.println(Arrays.toString(this.solution));
+						}
+						
 						meilleureSolution = false; // on a trouvé un voisin donc la solution n'est plus la meilleure
 					}
 				}
@@ -39,7 +47,6 @@ public class HillClimbing extends Algorithme {
 
 			// SI solution EST LA MEILLEURE
 			if (meilleureSolution) {
-				System.out.println(Arrays.toString(this.solution));
 				return this.solution;
 			}
 		}

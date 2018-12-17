@@ -1,6 +1,5 @@
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ExactTresSimple extends Algorithme {
@@ -40,7 +39,7 @@ public class ExactTresSimple extends Algorithme {
 			this.choisirSolution(tournee);
 			return;
 		}
-
+		
 		Set<Integer> villesNonPrises = this.initialiserVillesNonPrises(tournee, n);
 
 		// POUR CHAQUE ville PAS PRISE
@@ -50,7 +49,7 @@ public class ExactTresSimple extends Algorithme {
 			possibilite[tailleTournee] = ville;
 
 			// METTRE A JOUR la longueur de la tournee
-			int newLongueurTournee = this.longueurTournee(tournee, tailleTournee, longueurTournee);
+			int newLongueurTournee = this.longueurTournee(possibilite, tailleTournee, longueurTournee);
 
 			// EVALUER borneInferieure
 			int borneInferieure = this.borneInferieure(newLongueurTournee, villesNonPrises.size(), possibilite,
@@ -76,7 +75,7 @@ public class ExactTresSimple extends Algorithme {
 		if (tailleTournee == 0) {
 			return 0;
 		} else {
-			return longueurTournee + this.problem.getMatrice()[tailleTournee - 1][tailleTournee];
+			return longueurTournee + this.problem.getMatrice()[tournee[tailleTournee - 1]][tournee[tailleTournee]];
 		}
 	}
 

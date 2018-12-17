@@ -18,7 +18,7 @@ public class Main {
 		String line;
 		int[][] matrice;
 
-		String param = "--recuit";
+		String param = "--exacteTresSimple";
 		if (args.length < 1) {
 			System.out.println("Pas d'argument ! Param vaut : " + param);
 		} else {
@@ -109,7 +109,7 @@ public class Main {
 
 		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
 
-		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee, true);
 		tournee = hillClimbing.algorithme();
 
 		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(tournee));
@@ -122,10 +122,15 @@ public class Main {
 
 		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
 
-		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee, true);
 		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(hillClimbing.algorithme()));
 
-		Tabou tabou = new Tabou(pbl, tournee, 100, 100);
+		int[] tourneeTabou = new int[pbl.getN()];
+		for (int i = 0; i < tourneeTabou.length; i++) {
+			tourneeTabou[i] = i;
+		}
+
+		Tabou tabou = new Tabou(pbl, tournee, 10, 1000, true);
 		tournee = tabou.algorithme();
 
 		System.out.println("Tabou donne : " + tabou.distanceTournee(tournee));
@@ -141,7 +146,7 @@ public class Main {
 		System.out.println(exact.distanceTournee(tournee));
 		System.out.println("Trouvé en : " + (fin - debut) + "ms");
 	}
-	
+
 	private static void exacteTresSimle(PblTsp pbl) {
 		ExactTresSimple exact = new ExactTresSimple(pbl);
 		long debut = System.currentTimeMillis();
@@ -149,6 +154,15 @@ public class Main {
 		long fin = System.currentTimeMillis();
 		System.out.println(Arrays.toString(tournee));
 		System.out.println(exact.distanceTournee(tournee));
+		System.out.println("Trouvé en : " + (fin - debut) + "ms");
+		
+		System.out.println("\nGros lard :");
+		ExactGrosLard grosLard = new ExactGrosLard(pbl);
+		debut = System.currentTimeMillis();
+		tournee = grosLard.algorithme();
+		fin = System.currentTimeMillis();
+		System.out.println(Arrays.toString(tournee));
+		System.out.println(grosLard.distanceTournee(tournee));
 		System.out.println("Trouvé en : " + (fin - debut) + "ms");
 	}
 
@@ -162,7 +176,7 @@ public class Main {
 
 		System.out.println("Ajout proche donne : " + construction.distanceTournee(tournee));
 
-		HillClimbing hillClimbing = new HillClimbing(pbl, tournee);
+		HillClimbing hillClimbing = new HillClimbing(pbl, tournee, true);
 		tournee = hillClimbing.algorithme();
 		System.out.println("Hill climbing donne : " + hillClimbing.distanceTournee(tournee));
 
@@ -175,7 +189,7 @@ public class Main {
 		System.out.println("Choisissez la limite de temperature pour stopper l'algo : ");
 		double limiteRefroidissement = scanner.nextDouble();
 
-		RecuitSimule recuit = new RecuitSimule(pbl, temperature, refroidissement, limiteRefroidissement, tournee);
+		RecuitSimule recuit = new RecuitSimule(pbl, temperature, refroidissement, limiteRefroidissement, tournee, true);
 		tournee = recuit.algorithme();
 		System.out.println("Recuit simulé donne : " + recuit.distanceTournee(tournee));
 	}
